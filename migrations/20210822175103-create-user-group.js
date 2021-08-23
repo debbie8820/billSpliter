@@ -9,10 +9,14 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       UserId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        model: 'Users',
+        key: 'id'
       },
       GroupId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        model: 'Groups',
+        key: 'id'
       },
       createdAt: {
         allowNull: false,

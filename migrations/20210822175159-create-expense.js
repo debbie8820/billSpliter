@@ -15,16 +15,28 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       CategoryId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Categories',
+          key: 'id'
+        }
       },
       GroupId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Groups',
+          key: 'id'
+        }
       },
       payerId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        model: 'Users',
+        key: 'id'
       },
       payeeId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        model: 'Users',
+        key: 'id'
       },
       createdAt: {
         allowNull: false,

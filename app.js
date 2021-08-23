@@ -12,6 +12,4 @@ app.listen(process.env.PORT, () => {
   console.log(`App is running on port ${process.env.PORT}`)
 })
 
-app.use((err, req, res) => {
-  return res.status(500).json({ Error: String(err) })
-})
+require('./routes')(app)

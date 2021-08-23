@@ -11,20 +11,22 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       User.belongsToMany(models.Group, {
-        through: 'UserGroup',
+        through: models.UserGroup,
         foreignKey: 'UserId',
         as: 'groupId'
-      }),
-        User.belongsToMany(models.Expense, {
-          through: 'Expense',
-          foreignKey: 'payerId',
-          as: 'borrowers'
-        }),
-        User.belongsToMany(models.Expense, {
-          through: 'Expense',
-          foreignKey: 'payeeId',
-          as: 'lenders'
-        })
+      })
+
+      User.belongsToMany(models.Expense, {
+        through: models.Expense,
+        targetKey: 'payerId',
+        as: 'borrowers'
+      })
+
+      User.belongsToMany(models.Expense, {
+        through: models.Expense,
+        targetKey: 'payeeId',
+        as: 'lenders'
+      })
     }
   };
   User.init({
