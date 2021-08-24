@@ -10,7 +10,9 @@ const options = {
 
 passport.use(new JwtStrategy(options, async (payload, done) => {
   try {
-    const user = await User.findByPk(payload.id)
+    const user = await User.findByPk(payload.id, {
+      attributes: { exclude: ['password'] }
+    })
 
     if (!user) {
       return done(null, false)

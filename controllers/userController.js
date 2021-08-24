@@ -57,6 +57,10 @@ const userController = {
     catch (err) {
       next(err)
     }
+  },
+
+  getCurrentUser: (req, res, next) => {
+    return res.json(req.user)
   }
 }
 
