@@ -16,6 +16,7 @@ module.exports = {
       Array.from({ length: 50 }).map((d, i) => ({
         name: faker.commerce.productName(),
         amount: faker.commerce.price(),
+        date: faker.date.recent(),
         CategoryId: (Math.floor(Math.random() * 5) + 1) * 10 - 5,
         GroupId: userGroupId[i],
         payerId: groupList[userGroupId[i]][Math.floor(Math.random() * 3)],
