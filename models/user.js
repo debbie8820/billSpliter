@@ -10,23 +10,30 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+      User.hasOne(models.Expense, {
+        as: 'payer'
+      })
+      User.hasOne(models.Expense, {
+        as: 'payee'
+      })
+
       User.belongsToMany(models.Group, {
         through: models.UserGroup,
         foreignKey: 'UserId',
         as: 'groupId'
       })
 
-      User.belongsToMany(models.Expense, {
-        through: models.Expense,
-        targetKey: 'payerId',
-        as: 'borrowers'
-      })
+      // User.belongsToMany(models.Expense, {
+      //   through: models.Expense,
+      //   targetKey: 'payerId',
+      //   as: 'borrowers'
+      // })
 
-      User.belongsToMany(models.Expense, {
-        through: models.Expense,
-        targetKey: 'payeeId',
-        as: 'lenders'
-      })
+      // User.belongsToMany(models.Expense, {
+      //   through: models.Expense,
+      //   targetKey: 'payeeId',
+      //   as: 'lenders'
+      // })
     }
   };
   User.init({

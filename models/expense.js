@@ -12,6 +12,14 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Expense.belongsTo(models.Category)
       Expense.belongsTo(models.Group)
+      Expense.belongsTo(models.User, {
+        foreignKey: 'payerId',
+        as: 'payer',
+      })
+      Expense.belongsTo(models.User, {
+        foreignKey: 'payeeId',
+        as: 'payee'
+      })
     }
   };
   Expense.init({

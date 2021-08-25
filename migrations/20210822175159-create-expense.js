@@ -30,13 +30,17 @@ module.exports = {
       },
       payerId: {
         type: Sequelize.INTEGER,
-        model: 'Users',
-        key: 'id'
+        references: {
+          model: 'Users',
+          key: 'id'
+        }
       },
       payeeId: {
         type: Sequelize.INTEGER,
-        model: 'Users',
-        key: 'id'
+        references: {
+          model: 'Users',
+          key: 'id'
+        }
       },
       createdAt: {
         allowNull: false,
