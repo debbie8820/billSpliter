@@ -65,8 +65,13 @@ const userController = {
 
   getUserExpenses: async (req, res, next) => {
     try {
-      const { limit, date1, date2 } = req.query
-      const { UserId } = req.params
+      let { limit, date1, date2 } = req.query
+      const { id: UserId } = req.user
+      if (limit) {
+        limit = Number(limit)
+      } else {
+        limit = null
+      }
       const expenses = await userService.getUserExpenses(limit, date1, date2, UserId)
       return res.json(expenses)
     }

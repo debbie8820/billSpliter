@@ -1,4 +1,4 @@
-const { User, Expense } = require('../models')
+const { User, Expense, Category } = require('../models')
 const { Op } = require('sequelize')
 const sequelize = require('sequelize')
 
@@ -15,16 +15,22 @@ const userService = {
   },
 
   getUserExpenses: (limit, date1, date2, UserId) => {
-    const dateQuery = {
-      [Op.and]: [
-        { createdAt: { [Op.gte]: date1 } },
-        { createdAt: { [Op.lte]: date2 } }
-      ]
+
+    let dateQuery = {
+      [Op.gte]: date1,
+      [Op.lte]: date2
+    }
+    if (!date1 || !date2) {
+      dateQuery = {
+        [Op.ne]: new Date('2015-1-1')
+      }
     }
 
     return Expense.findAll({
       raw: true,
-      include: ['Category'],
+      include: [
+        { model: Category }
+      ],
       where: {
         payerId: UserId,
         createdAt: dateQuery
@@ -33,7 +39,9 @@ const userService = {
         'id',
         'name',
         'createdAt',
-        [sequelize.fn('count', sequelize.col('amount')), 'amount']
+        'payerId',
+        'payeeId',
+        [sequelize.fn('sum', sequelize.col('amount')), 'amount']
       ],
       group: ['name'],
       order: [['createdAt', 'DESC']],
