@@ -29,7 +29,9 @@ const userService = {
     return Expense.findAll({
       raw: true,
       include: [
-        { model: Category }
+        { model: Category, attributes: ['code', 'icon', 'name'] },
+        { model: User, as: 'payer', attributes: ['id', 'name', 'avatar'] },
+        { model: User, as: 'payee', attributes: ['id', 'name', 'avatar'] }
       ],
       where: {
         payerId: UserId,
