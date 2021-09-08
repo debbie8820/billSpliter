@@ -15,7 +15,7 @@ const userService = {
   },
 
   getUserExpenses: (limit, date1, date2, UserId) => {
-    limit = limit > 100 ? 100 : limit //最多只查100筆
+    limit = limit > 50 ? 50 : limit //最多只查50筆
     let dateQuery = {
       [Op.gte]: date1,
       [Op.lte]: date2
@@ -29,7 +29,7 @@ const userService = {
     return Expense.findAll({
       raw: true,
       include: [
-        { model: Category, attributes: ['code', 'icon', 'name'] },
+        { model: Category, attributes: ['id', 'code', 'icon', 'name'] },
         { model: User, as: 'payer', attributes: ['id', 'name', 'avatar'] },
         // { model: User, as: 'payee', attributes: ['id', 'name', 'avatar'] }
       ],
