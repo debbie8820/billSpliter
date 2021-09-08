@@ -78,6 +78,19 @@ const userController = {
     catch (err) {
       next(err)
     }
+  },
+
+  postUserExpense: async (req, res, next) => {
+    let { name, CategoryId, amount, date } = req.body
+    const { id: payerId } = req.user
+    if (!name || !CategoryId || !amount || !date) {
+      throw new Error('Please fill in all the columns')
+    }
+    amount = Number(amount)
+
+    const id = await userService.postUserExpense({ name, CategoryId, amount, date, payerId })
+
+    return res.json({ status: 'success', message: '成功新增支出', ExpenseId: id })
   }
 }
 

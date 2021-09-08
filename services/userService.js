@@ -47,6 +47,11 @@ const userService = {
       order: [['date', 'DESC']],
       limit
     })
+  },
+
+  postUserExpense: async (data) => {
+    const { id } = await Expense.create(data)
+    return id
   }
 }
 

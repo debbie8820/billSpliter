@@ -7,6 +7,7 @@ router.post('/register', userController.register)
 router.post('/login', userController.login)
 router.get('/currentUser', authenticate, userController.getCurrentUser)
 router.get('/expenses', authenticate, userController.getUserExpenses)
+router.post('/expense', authenticate, userController.postUserExpense)
 
 
 
