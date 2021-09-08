@@ -10,25 +10,22 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+      Expense.hasMany(models.ExpenseDetail)
       Expense.belongsTo(models.Category)
       Expense.belongsTo(models.Group)
       Expense.belongsTo(models.User, {
         foreignKey: 'payerId',
         as: 'payer',
       })
-      Expense.belongsTo(models.User, {
-        foreignKey: 'payeeId',
-        as: 'payee'
-      })
     }
   };
   Expense.init({
     name: DataTypes.STRING,
     amount: DataTypes.INTEGER,
+    date: DataTypes.DATE,
     CategoryId: DataTypes.INTEGER,
     GroupId: DataTypes.INTEGER,
-    payerId: DataTypes.INTEGER,
-    payeeId: DataTypes.INTEGER
+    payerId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Expense',

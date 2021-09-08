@@ -15,14 +15,14 @@ const userService = {
   },
 
   getUserExpenses: (limit, date1, date2, UserId) => {
-
+    limit = limit > 100 ? 100 : limit //最多只查100筆
     let dateQuery = {
       [Op.gte]: date1,
       [Op.lte]: date2
     }
     if (!date1 || !date2) {
       dateQuery = {
-        [Op.ne]: new Date('2015-1-1')
+        [Op.gte]: new Date('2001-1-1')
       }
     }
 
@@ -31,22 +31,20 @@ const userService = {
       include: [
         { model: Category, attributes: ['code', 'icon', 'name'] },
         { model: User, as: 'payer', attributes: ['id', 'name', 'avatar'] },
-        { model: User, as: 'payee', attributes: ['id', 'name', 'avatar'] }
+        // { model: User, as: 'payee', attributes: ['id', 'name', 'avatar'] }
       ],
       where: {
         payerId: UserId,
-        createdAt: dateQuery
+        date: dateQuery
       },
       attributes: [
         'id',
         'name',
-        'createdAt',
-        'payerId',
-        'payeeId',
-        [sequelize.fn('sum', sequelize.col('amount')), 'amount']
+        'amount',
+        'date',
+        'payerId'
       ],
-      group: ['name'],
-      order: [['createdAt', 'DESC']],
+      order: [['date', 'DESC']],
       limit
     })
   }
