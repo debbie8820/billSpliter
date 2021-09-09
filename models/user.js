@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // User.hasMany(models.Expense)
-
+      User.hasMany(models.UserGroup)
       User.belongsToMany(models.Expense, {
         through: models.ExpenseDetail,
         foreignKey: 'payerId',

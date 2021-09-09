@@ -114,6 +114,17 @@ const userController = {
     catch (err) {
       next(err)
     }
+  },
+
+  getUserGroups: async (req, res, next) => {
+    try {
+      const { id: UserId } = req.user
+      const groups = await userService.getUserGroups(UserId)
+      return res.json(groups)
+    }
+    catch (err) {
+      next(err)
+    }
   }
 }
 

@@ -9,7 +9,7 @@ router.get('/currentUser', authenticate, userController.getCurrentUser)
 router.get('/expenses', authenticate, userController.getUserExpenses)
 router.post('/expenses', authenticate, userController.postUserExpense)
 router.put('/expenses/:ExpenseId', authenticate, userController.putUserExpense)
-
+router.get('/groups', authenticate, userController.getUserGroups)
 
 
 

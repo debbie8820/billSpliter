@@ -1,6 +1,6 @@
-const { User, Expense, Category } = require('../models')
+const { User, Expense, Category, Group, UserGroup } = require('../models')
 const { Op } = require('sequelize')
-const sequelize = require('sequelize')
+const Sequelize = require('sequelize')
 
 const userService = {
   register: (data) => {
@@ -68,6 +68,33 @@ const userService = {
         throw new Error('The expense doesn\'t exist.')
       }
       await expense.update({ name, CategoryId, amount, date })
+    }
+    catch (err) {
+      throw err
+    }
+  },
+
+  getUserGroups: async (UserId) => {
+    try {
+      const result = UserGroup.findAndCountAll({
+        include: [
+          {
+            model: Group, attributes: [
+              'id',
+              'name',
+              'img',
+              [Sequelize.literal(`(SELECT COUNT (*) FROM UserGroups WHERE GroupId = Group.id)`), 'totalMembers'],
+              [Sequelize.literal(`(SELECT COUNT (*) FROM Expenses WHERE GroupId = Group.id)`), 'totalExpenses'],
+              [Sequelize.literal(`(SELECT SUM (ExpenseDetails.amount) FROM expenseDetails WHERE payerId = ${UserId} AND ExpenseId in (SELECT id FROM Expenses WHERE GroupId = Group.id))`), 'totalUserPaid'],
+              [Sequelize.literal(`(SELECT SUM (ExpenseDetails.amount) FROM expenseDetails WHERE payeeId = ${UserId} AND ExpenseId in (SELECT id FROM Expenses WHERE GroupId = Group.id))`), 'totalUserOwed']
+            ]
+          }
+        ],
+        where: { UserId },
+        attributes: ['UserId', 'GroupId'],
+        raw: true
+      })
+      return result
     }
     catch (err) {
       throw err
