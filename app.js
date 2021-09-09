@@ -7,6 +7,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 app.use(urlencoded({ extended: true }))
+app.use(express.json())
 
 app.listen(process.env.PORT, () => {
   console.log(`App is running on port ${process.env.PORT}`)
