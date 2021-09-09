@@ -81,16 +81,39 @@ const userController = {
   },
 
   postUserExpense: async (req, res, next) => {
-    let { name, CategoryId, amount, date } = req.body
-    const { id: payerId } = req.user
-    if (!name || !CategoryId || !amount || !date) {
-      throw new Error('Please fill in all the columns')
+    try {
+      let { name, CategoryId, amount, date } = req.body
+      const { id: payerId } = req.user
+      if (!name || !CategoryId || !amount || !date) {
+        throw new Error('Please fill in all the columns')
+      }
+      amount = Number(amount)
+
+      const id = await userService.postUserExpense({ name, CategoryId, amount, date, payerId })
+
+      return res.json({ status: 'success', message: 'new expense created', ExpenseId: id })
     }
-    amount = Number(amount)
+    catch (err) {
+      next(err)
+    }
+  },
 
-    const id = await userService.postUserExpense({ name, CategoryId, amount, date, payerId })
+  putUserExpense: async (req, res, next) => {
+    try {
+      let { name, CategoryId, amount, date } = req.body
+      const { ExpenseId } = req.params
+      if (!name || !CategoryId || !amount || !date || !ExpenseId) {
+        throw new Error('Please fill in all the fields')
+      }
+      amount = Number(amount)
 
-    return res.json({ status: 'success', message: '成功新增支出', ExpenseId: id })
+      await userService.putUserExpense({ name, CategoryId, amount, date, ExpenseId })
+
+      return res.json({ status: 'success', message: 'Your expense is updated', ExpenseId })
+    }
+    catch (err) {
+      next(err)
+    }
   }
 }
 

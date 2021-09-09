@@ -50,9 +50,32 @@ const userService = {
   },
 
   postUserExpense: async (data) => {
-    const { id } = await Expense.create(data)
-    return id
+    try {
+      const { id } = await Expense.create(data)
+      return id
+    }
+    catch (err) {
+      throw err
+    }
+  },
+
+  putUserExpense: async (data) => {
+    try {
+      const { name, CategoryId, amount, date, ExpenseId } = data
+      const expense = await Expense.findByPk(ExpenseId)
+
+      if (!expense) {
+        throw new Error('The expense doesn\'t exist.')
+      }
+      await expense.update({ name, CategoryId, amount, date })
+    }
+    catch (err) {
+      throw err
+    }
   }
+
+
+
 }
 
 module.exports = userService
