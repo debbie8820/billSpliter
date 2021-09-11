@@ -32,6 +32,17 @@ const groupController = {
     catch (err) {
       next(err)
     }
+  },
+
+  getGroup: async (req, res, next) => {
+    try {
+      const { GroupId } = req.params
+      const group = await groupService.getGroup(GroupId)
+      return res.json(group)
+    }
+    catch (err) {
+      next(err)
+    }
   }
 }
 
