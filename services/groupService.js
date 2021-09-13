@@ -71,13 +71,28 @@ const groupService = {
   },
 
   postGroupMember: async (UserId, GroupId) => {
-    await UserGroup.findOrCreate({ where: { UserId, GroupId } })
-    const record = await UserGroup.findOne({
-      raw: true,
-      where: { UserId, GroupId },
-      attributes: ['id', 'UserId', 'GroupId']
-    })
-    return record
+    try {
+      await UserGroup.findOrCreate({ where: { UserId, GroupId } })
+      const record = await UserGroup.findOne({
+        raw: true,
+        where: { UserId, GroupId },
+        attributes: ['id', 'UserId', 'GroupId']
+      })
+      return record
+    }
+    catch (err) {
+      throw err
+    }
+  },
+
+  deleteGroupMember: async (GroupId, MemberId) => {
+    try {
+      const record = await UserGroup.findOne({ where: { GroupId, UserId: MemberId } })
+      await record.destroy()
+    }
+    catch (err) {
+      throw err
+    }
   }
 }
 

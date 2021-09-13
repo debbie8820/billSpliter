@@ -78,6 +78,17 @@ const groupController = {
     catch (err) {
       next(err)
     }
+  },
+
+  deleteGroupMember: async (req, res, next) => {
+    try {
+      const { GroupId, MemberId } = req.params
+      await groupService.deleteGroupMember(GroupId, MemberId)
+      res.json({ status: 'success', message: 'Member deleted' })
+    }
+    catch (err) {
+      next(err)
+    }
   }
 }
 
