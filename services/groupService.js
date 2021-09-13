@@ -68,6 +68,16 @@ const groupService = {
     catch (err) {
       throw err
     }
+  },
+
+  postGroupMember: async (UserId, GroupId) => {
+    await UserGroup.findOrCreate({ where: { UserId, GroupId } })
+    const record = await UserGroup.findOne({
+      raw: true,
+      where: { UserId, GroupId },
+      attributes: ['id', 'UserId', 'GroupId']
+    })
+    return record
   }
 }
 

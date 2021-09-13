@@ -66,6 +66,18 @@ const groupController = {
     catch (err) {
       next(err)
     }
+  },
+
+  postGroupMember: async (req, res, next) => {
+    try {
+      const { UserId } = req.body
+      const { GroupId } = req.params
+      const record = await groupService.postGroupMember(UserId, GroupId)
+      res.json(record)
+    }
+    catch (err) {
+      next(err)
+    }
   }
 }
 
