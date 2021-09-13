@@ -43,6 +43,29 @@ const groupController = {
     catch (err) {
       next(err)
     }
+  },
+
+  putGroup: async (req, res, next) => { //members只能修改跟原本一樣的數量
+    try {
+      const { GroupId } = req.params
+      const { name, members } = req.body
+      let img
+      const { file } = req
+      if (!name || !members || !members.length) {
+        throw new Error('Please fill in all the fields')
+      }
+
+      if (file) {
+        imgur.setClientID(process.env.IMGUR_CLIENT_ID)
+        img = await imgurUpload(file.path)
+      }
+
+      await groupService.putGroup({ name, img, members, GroupId })
+      return res.json({ status: 'success', message: 'Group updated', GroupId })
+    }
+    catch (err) {
+      next(err)
+    }
   }
 }
 
