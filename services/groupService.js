@@ -52,14 +52,15 @@ const groupService = {
   putGroup: async (data) => {
     try {
       const { name, members, GroupId } = data
-      let img
+      let { img } = data
       const group = await Group.findByPk(GroupId)
+
       if (!group) throw new Error('The group doesn\'t exist')
       if (!img) {
         img = group.img
       }
-      await group.update({ name, img })
 
+      await group.update({ name, img })
       await Promise.all(members.map(object => {
         return UserGroup.update({ UserId: object.UserId }, { where: { id: object.id } })
       }))
