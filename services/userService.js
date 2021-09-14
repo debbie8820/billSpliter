@@ -134,6 +134,19 @@ const userService = {
 
   postFriend: (followerId, followingId) => {
     Friendship.findOrCreate({ where: { followerId, followingId } })
+  },
+
+  deleteFriend: async (followerId, followingId) => {
+    try {
+      const record = await Friendship.findOne({ where: { followerId, followingId } })
+      if (!record) {
+        throw new Error('The user is not your friend')
+      }
+      await record.destroy()
+    }
+    catch (err) {
+      throw err
+    }
   }
 }
 

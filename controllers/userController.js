@@ -159,6 +159,18 @@ const userController = {
     catch (err) {
       next(err)
     }
+  },
+
+  deleteFriend: async (req, res, next) => {
+    try {
+      const { UserId: followingId } = req.params
+      const { id: followerId } = req.user
+      await userService.deleteFriend(followerId, followingId)
+      res.json({ status: 'success', message: 'Friend deleted' })
+    }
+    catch (err) {
+      next(err)
+    }
   }
 }
 
