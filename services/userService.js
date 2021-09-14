@@ -130,6 +130,10 @@ const userService = {
     catch (err) {
       throw err
     }
+  },
+
+  postFriend: (followerId, followingId) => {
+    Friendship.findOrCreate({ where: { followerId, followingId } })
   }
 }
 

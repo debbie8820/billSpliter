@@ -147,6 +147,18 @@ const userController = {
     catch (err) {
       next(err)
     }
+  },
+
+  postFriend: async (req, res, next) => {
+    try {
+      const { UserId: followingId } = req.params
+      const { id: followerId } = req.user
+      await userService.postFriend(followerId, followingId)
+      res.json({ status: 'success', message: 'Friend added' })
+    }
+    catch (err) {
+      next(err)
+    }
   }
 }
 
