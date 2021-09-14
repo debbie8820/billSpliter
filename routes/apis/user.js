@@ -11,6 +11,7 @@ router.post('/expenses', authenticate, userController.postUserExpense)
 router.put('/expenses/:ExpenseId', authenticate, userController.putUserExpense)
 router.get('/groups', authenticate, userController.getUserGroups)
 router.get('/friends', authenticate, userController.getUserFriends)
+router.get('/', authenticate, userController.getUserData)
 
 
 

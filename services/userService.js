@@ -108,6 +108,28 @@ const userService = {
       attributes: [],
       include: [{ model: User, as: 'followings', attributes: [['id', 'friendId'], 'avatar', 'name', 'account'] }]
     })
+  },
+
+  getUserData: async (account, UserId) => {
+    try {
+      const userData = await User.findOne({
+        where: { account },
+        attributes: [
+          'id',
+          'account',
+          'name',
+          'avatar',
+          [Sequelize.literal(`(SELECT EXISTS (SELECT * FROM Friendships WHERE followerId = ${UserId} AND followingId = User.id))`), 'isFriend']
+        ]
+      })
+      if (!userData) {
+        throw new Error('The user doesn\'t exist')
+      }
+      return userData
+    }
+    catch (err) {
+      throw err
+    }
   }
 }
 

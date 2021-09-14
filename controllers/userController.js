@@ -135,6 +135,18 @@ const userController = {
     catch (err) {
       next(err)
     }
+  },
+
+  getUserData: async (req, res, next) => {
+    try {
+      const { account } = req.query
+      const { id: UserId } = req.user
+      const user = await userService.getUserData(account, UserId)
+      res.json(user)
+    }
+    catch (err) {
+      next(err)
+    }
   }
 }
 
