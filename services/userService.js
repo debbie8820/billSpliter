@@ -1,4 +1,4 @@
-const { User, Expense, Category, Group, UserGroup } = require('../models')
+const { User, Expense, Category, Group, UserGroup, Friendship } = require('../models')
 const { Op } = require('sequelize')
 const Sequelize = require('sequelize')
 
@@ -99,10 +99,16 @@ const userService = {
     catch (err) {
       throw err
     }
+  },
+
+  getUserFriends: (UserId) => {
+    return User.findAll({
+      raw: true,
+      where: { id: UserId },
+      attributes: [],
+      include: [{ model: User, as: 'followings', attributes: [['id', 'friendId'], 'avatar', 'name', 'account'] }]
+    })
   }
-
-
-
 }
 
 module.exports = userService

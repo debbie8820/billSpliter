@@ -125,6 +125,16 @@ const userController = {
     catch (err) {
       next(err)
     }
+  },
+
+  getUserFriends: async (req, res, next) => {
+    try {
+      const friends = await userService.getUserFriends(req.user.id)
+      res.json(friends)
+    }
+    catch (err) {
+      next(err)
+    }
   }
 }
 
