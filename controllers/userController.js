@@ -77,11 +77,10 @@ const userController = {
     try {
       let { limit, date1, date2 } = req.query
       const { id: UserId } = req.user
-      if (limit) {
-        limit = Number(limit)
-      } else {
-        limit = null
+      if (!limit) {
+        limit = 50
       }
+      limit = Number(limit)
       const expenses = await userService.getUserExpenses(limit, date1, date2, UserId)
       return res.json(expenses)
     }
