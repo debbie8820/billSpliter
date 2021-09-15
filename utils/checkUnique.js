@@ -1,15 +1,15 @@
 const { User } = require('../models')
 
-const checkAccount = async (account) => {
-  const accountExists = await User.findOne({ where: { account } })
-  if (accountExists) {
+const checkAccount = async (account, UserId) => {
+  const user = await User.findOne({ where: { account } })
+  if (user && user.id !== UserId) {
     throw new Error('The account has already been registered.')
   }
 }
 
-const checkEmail = async (email) => {
-  const emailExists = await User.findOne({ where: { email } })
-  if (emailExists) {
+const checkEmail = async (email, UserId) => {
+  const user = await User.findOne({ where: { email } })
+  if (user && user.id !== UserId) {
     throw new Error('The email has already been registered.')
   }
 }

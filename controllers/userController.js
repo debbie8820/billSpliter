@@ -2,6 +2,16 @@ const userService = require('../services/userService')
 const validation = require('../utils/validate')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const imgur = require('imgur-node-api')
+
+const imgurUpload = (filePath) => {
+  return new Promise((resolve, reject) => {
+    imgur.upload(filePath, (err, res) => {
+      if (err) return reject(err)
+      return resolve(res.data.link)
+    })
+  })
+}
 
 const userController = {
   register: async (req, res, next) => {
@@ -142,6 +152,27 @@ const userController = {
       const { account } = req.query
       const { id: UserId } = req.user
       const user = await userService.getUserData(account, UserId)
+      res.json(user)
+    }
+    catch (err) {
+      next(err)
+    }
+  },
+
+  putUserData: async (req, res, next) => {
+    try {
+      const { id: UserId } = req.user
+      req.body.UserId = UserId
+      await validation(req.body)
+      const { account, password, email, name } = req.body
+      const hash = await bcrypt.hashSync(password, 10)
+      const { file } = req
+      let avatar
+      if (file) {
+        imgur.setClientID(process.env.IMGUR_CLIENT_ID)
+        avatar = await imgurUpload(file.path)
+      }
+      const user = await userService.putUserData({ account, password: hash, email, name, avatar, UserId })
       res.json(user)
     }
     catch (err) {

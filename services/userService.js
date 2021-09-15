@@ -132,6 +132,18 @@ const userService = {
     }
   },
 
+  putUserData: async (data) => {
+    try {
+      const { account, password, email, name, avatar, UserId } = data
+      const user = await User.findByPk(UserId)
+      if (!user) throw new Error('The user doesn\'t exist')
+      await user.update({ account, password, email, name, avatar })
+    }
+    catch (err) {
+      throw err
+    }
+  },
+
   postFriend: (followerId, followingId) => {
     Friendship.findOrCreate({ where: { followerId, followingId } })
   },
