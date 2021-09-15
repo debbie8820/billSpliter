@@ -30,8 +30,7 @@ const userService = {
       raw: true,
       include: [
         { model: Category, attributes: ['id', 'code', 'icon', 'name'] },
-        { model: User, as: 'payer', attributes: ['id', 'name', 'avatar'] },
-        // { model: User, as: 'payee', attributes: ['id', 'name', 'avatar'] }
+        { model: User, as: 'payer', attributes: ['id', 'name', 'avatar'] }
       ],
       where: {
         payerId: UserId,

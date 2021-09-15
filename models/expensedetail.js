@@ -11,6 +11,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       ExpenseDetail.belongsTo(models.Expense)
+      ExpenseDetail.belongsTo(models.User, {
+        foreignKey: 'payerId',
+        as: 'payers'
+      })
+      ExpenseDetail.belongsTo(models.User, {
+        foreignKey: 'payeeId',
+        as: 'payees'
+      })
     }
   };
   ExpenseDetail.init({

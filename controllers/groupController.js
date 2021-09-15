@@ -89,6 +89,23 @@ const groupController = {
     catch (err) {
       next(err)
     }
+  },
+
+  getGroupExpenses: async (req, res, next) => {
+    try {
+      const { GroupId } = req.params
+      const { id: UserId } = req.user
+      let { limit } = req.query
+      limit = Number(limit)
+      if (!limit) {
+        limit = 20
+      }
+      const expenses = await groupService.getGroupExpenses(GroupId, UserId, limit)
+      res.json(expenses)
+    }
+    catch (err) {
+      next(err)
+    }
   }
 }
 

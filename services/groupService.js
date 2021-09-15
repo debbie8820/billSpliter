@@ -1,4 +1,4 @@
-const { User, Group, UserGroup } = require('../models')
+const { User, Group, UserGroup, Expense, ExpenseDetail, Category } = require('../models')
 const Sequelize = require('sequelize')
 
 const groupService = {
@@ -89,6 +89,37 @@ const groupService = {
     try {
       const record = await UserGroup.findOne({ where: { GroupId, UserId: MemberId } })
       await record.destroy()
+    }
+    catch (err) {
+      throw err
+    }
+  },
+
+  getGroupExpenses: async (GroupId, UserId, limit) => {
+    try {
+      const expenses = await Expense.findAll({
+        raw: true,
+        nest: true,
+        where: { GroupId },
+        attributes: ['id', 'name', 'amount', 'GroupId', 'date',
+          [Sequelize.literal(`(SELECT SUM (amount) FROM ExpenseDetails WHERE ExpenseId = Expense.id AND payerId = ${UserId})`), 'totalUserPaid'],
+          [Sequelize.literal(`(SELECT SUM (amount) FROM ExpenseDetails WHERE ExpenseId = Expense.id AND payeeId = ${UserId})`), 'totalUserOwed']
+        ],
+        include: [
+          {
+            model: ExpenseDetail,
+            include: { model: User, as: 'payees', attributes: ['id', 'name', 'avatar'] }
+          },
+          {
+            model: ExpenseDetail,
+            include: { model: User, as: 'payers', attributes: ['id', 'name', 'avatar'] }
+          },
+          { model: Category }
+        ],
+        order: [['date', 'DESC']],
+        limit
+      })
+      return expenses
     }
     catch (err) {
       throw err
