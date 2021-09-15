@@ -138,6 +138,7 @@ const userService = {
       const user = await User.findByPk(UserId)
       if (!user) throw new Error('The user doesn\'t exist')
       await user.update({ account, password, email, name, avatar })
+      return user.toJSON()
     }
     catch (err) {
       throw err
