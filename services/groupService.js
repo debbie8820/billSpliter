@@ -32,6 +32,7 @@ const groupService = {
     if (!group) throw new Error('The group doesn\'t exist')
     const members = await UserGroup.findAll({
       raw: true,
+      nest: true,
       where: { GroupId },
       attributes: ['id', 'UserId', 'GroupId'],
       include: {
