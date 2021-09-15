@@ -103,6 +103,7 @@ const userService = {
   getUserFriends: (UserId) => {
     return User.findAll({
       raw: true,
+      nest: true,
       where: { id: UserId },
       attributes: [],
       include: [{ model: User, as: 'followings', attributes: [['id', 'friendId'], 'avatar', 'name', 'account'] }]
