@@ -136,6 +136,18 @@ const groupController = {
     catch (err) {
       next(err)
     }
+  },
+
+  postExpenseDetail: async (req, res, next) => {
+    try {
+      const { ExpenseId } = req.params
+      const { expenseDetail } = req.body
+      const record = await groupService.postExpenseDetail({ ExpenseId, expenseDetail })
+      res.json(record)
+    }
+    catch (err) {
+      next(err)
+    }
   }
 }
 

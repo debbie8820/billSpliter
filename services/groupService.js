@@ -164,6 +164,27 @@ const groupService = {
     catch (err) {
       throw err
     }
+  },
+
+  postExpenseDetail: async (data) => {
+    try {
+      const { ExpenseId, expenseDetail } = data
+      const expense = await Expense.findByPk(ExpenseId)
+      if (!expense) throw new Error('The expense does not exist')
+      const record = await Promise.all(expenseDetail.map(async (object) => {
+        try {
+          await checkExpenseDetail(object)
+          return await ExpenseDetail.create({ ExpenseId, payerId: object.payerId, payeeId: object.payeeId, amount: object.amount })
+        }
+        catch (err) {
+          throw err
+        }
+      }))
+      return record
+    }
+    catch (err) {
+      throw err
+    }
   }
 }
 

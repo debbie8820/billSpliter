@@ -3,11 +3,13 @@ const { User, ExpenseDetail } = require('../models')
 const checkExpenseDetail = async (object) => {
   try {
     const { id, payerId, payeeId, amount } = object
-    if (!id || !payerId || !payeeId || amount == undefined) {
+    if (!payerId || !payeeId || amount == undefined) {
       throw new Error('Please fill in all the fields in expenseDetail')
     }
-    const record = ExpenseDetail.findByPk(id)
-    if (!record) throw new Error(`The record does not exist`)
+    if (id) {
+      const record = ExpenseDetail.findByPk(id)
+      if (!record) throw new Error(`The record does not exist`)
+    }
     if (payerId === payeeId) {
       const payer = await User.findByPk(payerId)
       if (!payer) throw new Error(`The payer and payee does not exist`)
