@@ -1,5 +1,6 @@
 const { User, Group, UserGroup, Expense, ExpenseDetail, Category } = require('../models')
 const Sequelize = require('sequelize')
+const checkGroupExpense = require('../utils/checkGroupExpense')
 
 const groupService = {
   postGroup: async (data) => {
@@ -121,6 +122,24 @@ const groupService = {
         limit
       })
       return expenses
+    }
+    catch (err) {
+      throw err
+    }
+  },
+
+  postGroupExpenses: async (data) => {
+    try {
+      const { name, amount, GroupId, CategoryId, date, expenseDetail } = data
+      let expense = await Expense.create({ name, amount, GroupId, CategoryId, date })
+      expense = expense.get({ plain: true })
+      const records = await Promise.all(expenseDetail.map(async (object) => {
+        if (object.payeeId < 0 || object.payerId < 0) throw new Error('PayerId and PayeeId should be larger than 0')
+        const record = await ExpenseDetail.create({ ExpenseId: expense.id, payerId: object.payerId, payeeId: object.payeeId, amount: object.amount })
+        return record.get({ plain: true })
+      }))
+      expense.expenseDetail = records
+      return expense
     }
     catch (err) {
       throw err

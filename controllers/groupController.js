@@ -1,5 +1,6 @@
 const groupService = require('../services/groupService')
 const imgur = require('imgur-node-api')
+const checkGroupExpense = require('../utils/checkGroupExpense')
 
 const imgurUpload = (filePath) => {
   return new Promise((resolve, reject) => {
@@ -102,6 +103,20 @@ const groupController = {
       }
       const expenses = await groupService.getGroupExpenses(GroupId, UserId, limit)
       res.json(expenses)
+    }
+    catch (err) {
+      next(err)
+    }
+  },
+
+  postGroupExpenses: async (req, res, next) => {
+    try {
+      const { GroupId } = req.params
+      req.body.GroupId = GroupId
+      const { name, amount, CategoryId, date, expenseDetail } = req.body
+      await checkGroupExpense(req.body)
+      const record = await groupService.postGroupExpenses({ name, amount, GroupId, CategoryId, date, expenseDetail })
+      res.json(record)
     }
     catch (err) {
       next(err)
