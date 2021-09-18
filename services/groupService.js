@@ -185,6 +185,17 @@ const groupService = {
     catch (err) {
       throw err
     }
+  },
+
+  deleteExpenseDetail: async (DetailId) => {
+    try {
+      const detail = await ExpenseDetail.findByPk(DetailId)
+      if (!detail) throw new Error('The expense detail does not exist')
+      await detail.destroy
+    }
+    catch (err) {
+      throw err
+    }
   }
 }
 

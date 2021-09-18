@@ -148,6 +148,17 @@ const groupController = {
     catch (err) {
       next(err)
     }
+  },
+
+  deleteExpenseDetail: async (req, res, next) => {
+    try {
+      const { DetailId } = req.params
+      await groupService.deleteExpenseDetail(DetailId)
+      res.json({ status: 'success', message: 'Expense detail deleted' })
+    }
+    catch (err) {
+      next(err)
+    }
   }
 }
 
