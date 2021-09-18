@@ -1,8 +1,12 @@
-const { Group, Category } = require('../models')
+const { Group, Category, Expense } = require('../models')
 
 const checkGroupExpense = async (data) => {
   try {
-    const { name, amount, GroupId, CategoryId, date, expenseDetail } = data
+    const { name, amount, GroupId, CategoryId, date, ExpenseId, expenseDetail } = data
+    if (ExpenseId !== undefined) {
+      const expense = await Expense.findByPk(ExpenseId)
+      if (!expense) throw new Error('Cannot find the expense')
+    }
     const category = await Category.findByPk(CategoryId)
     if (!category) throw new Error('Cannot find the category')
     const group = await Group.findByPk(GroupId)

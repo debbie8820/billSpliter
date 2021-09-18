@@ -1,6 +1,7 @@
 const { User, Group, UserGroup, Expense, ExpenseDetail, Category } = require('../models')
 const Sequelize = require('sequelize')
 const checkGroupExpense = require('../utils/checkGroupExpense')
+const checkExpenseDetail = require('../utils/checkExpenseDetail')
 
 const groupService = {
   postGroup: async (data) => {
@@ -140,6 +141,25 @@ const groupService = {
       }))
       expense.expenseDetail = records
       return expense
+    }
+    catch (err) {
+      throw err
+    }
+  },
+
+  putGroupExpenses: async (data) => {
+    try {
+      const { name, amount, GroupId, ExpenseId, CategoryId, date, expenseDetail } = data
+      await Expense.update({ name, amount, GroupId, CategoryId, date }, { where: { id: ExpenseId } })
+      await Promise.all(expenseDetail.map(async (object) => {
+        try {
+          await checkExpenseDetail(object)
+          ExpenseDetail.update({ ExpenseId, payerId: object.payerId, payeeId: object.payeeId, amount: object.amount }, { where: { id: object.id } })
+        }
+        catch (err) {
+          throw err
+        }
+      }))
     }
     catch (err) {
       throw err

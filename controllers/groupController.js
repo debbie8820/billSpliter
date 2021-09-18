@@ -121,6 +121,21 @@ const groupController = {
     catch (err) {
       next(err)
     }
+  },
+
+  putGroupExpenses: async (req, res, next) => {
+    try {
+      const { GroupId, ExpenseId } = req.params
+      const { name, amount, CategoryId, date, expenseDetail } = req.body
+      req.body.ExpenseId = ExpenseId
+      req.body.GroupId = GroupId
+      await checkGroupExpense(req.body)
+      await groupService.putGroupExpenses({ name, amount, GroupId, CategoryId, date, ExpenseId, expenseDetail })
+      res.json({ status: 'success', message: 'Group Expense updated', ExpenseId })
+    }
+    catch (err) {
+      next(err)
+    }
   }
 }
 
