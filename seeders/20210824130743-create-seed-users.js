@@ -11,7 +11,6 @@ module.exports = {
         password: bcryptjs.hashSync('12345678', 10),
         email: `user${i + 1}@example.com`,
         name: `user${i + 1}`,
-        phone: '0912345678',
         avatar: faker.image.image(),
         createdAt: new Date(),
         updatedAt: new Date()

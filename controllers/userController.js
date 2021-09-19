@@ -16,12 +16,12 @@ const imgurUpload = (filePath) => {
 const userController = {
   register: async (req, res, next) => {
     try {
-      const { account, password, email, name, phone } = req.body
+      const { account, password, email, name } = req.body
       await validation(req.body)
 
       const hash = bcrypt.hashSync(password, 10)
 
-      await userService.register({ account, password: hash, email, name, phone })
+      await userService.register({ account, password: hash, email, name })
       return res.json({ status: 'success', message: '成功註冊' })
     }
     catch (err) {
