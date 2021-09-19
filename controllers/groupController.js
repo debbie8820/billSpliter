@@ -38,7 +38,8 @@ const groupController = {
   getGroup: async (req, res, next) => {
     try {
       const { GroupId } = req.params
-      const group = await groupService.getGroup(GroupId)
+      const { id: UserId } = req.user
+      const group = await groupService.getGroup(GroupId, UserId)
       return res.json(group)
     }
     catch (err) {

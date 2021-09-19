@@ -21,7 +21,7 @@ const groupService = {
     }
   },
 
-  getGroup: async (GroupId) => {
+  getGroup: async (GroupId, UserId) => {
     const group = await Group.findByPk(GroupId, {
       attributes: [
         'id',
@@ -44,7 +44,8 @@ const groupService = {
           'name',
           'avatar',
           [Sequelize.literal(`(SELECT SUM (amount) FROM expenseDetails WHERE payerId = User.id AND ExpenseId in (SELECT id FROM Expenses WHERE GroupId = ${GroupId}))`), 'totalUserPaid'],
-          [Sequelize.literal(`(SELECT SUM (amount) FROM expenseDetails WHERE payeeId = User.id AND ExpenseId in (SELECT id FROM Expenses WHERE GroupId = ${GroupId}))`), 'totalUserOwed']
+          [Sequelize.literal(`(SELECT SUM (amount) FROM expenseDetails WHERE payeeId = User.id AND ExpenseId in (SELECT id FROM Expenses WHERE GroupId = ${GroupId}))`), 'totalUserOwed'],
+          [Sequelize.literal(`(SELECT EXISTS (SELECT * FROM Friendships WHERE followerId = ${UserId} AND followingId = User.id))`), 'isFriend']
         ]
       }
     })
