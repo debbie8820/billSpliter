@@ -1,28 +1,23 @@
-const { Group, Category, Expense } = require('../models')
+const { Group, Expense } = require('../models')
 
 const checkGroupExpense = async (data) => {
   try {
     const { name, amount, GroupId, CategoryId, date, ExpenseId, expenseDetail } = data
+    if (!name || !amount || !GroupId || !CategoryId || !date || !expenseDetail || !expenseDetail.length) {
+      throw new Error('Please fill in all the fields')
+    }
+
     if (ExpenseId !== undefined) {
       const expense = await Expense.findByPk(ExpenseId)
       if (!expense) throw new Error('Cannot find the expense')
     }
-    const category = await Category.findByPk(CategoryId)
-    if (!category) throw new Error('Cannot find the category')
+
     const group = await Group.findByPk(GroupId)
     if (!group) throw new Error('Cannot find the group')
 
-    if (!name || !amount || !GroupId || !CategoryId || !date || !expenseDetail || !expenseDetail.length) {
-      throw new Error('Please fill in all the fields')
-    }
-    if (Number(amount) < 0 || Number(amount) == null) {
-      throw new Error('Amount should be a positive number')
-    }
-    expenseDetail.map((d, i) => {
-      if (Number(d.amount) < 0 || Number(d.amount) == null) {
-        throw new Error('Amount should be a positive number')
-      }
-    })
+    if (amount < 0 || amount % 1 !== 0) throw new Error('Incorrect amount')
+    if (CategoryId < 0 || CategoryId % 1 !== 0) throw new Error('Incorrect CategoryId')
+
   }
   catch (err) {
     throw err

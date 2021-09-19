@@ -1,16 +1,7 @@
 const groupService = require('../services/groupService')
 const imgur = require('imgur-node-api')
 const checkGroupExpense = require('../utils/checkGroupExpense')
-
-const imgurUpload = (filePath) => {
-  return new Promise((resolve, reject) => {
-    imgur.upload(filePath, (err, res) => {
-      if (err) return reject(err)
-      return resolve(res.data.link)
-    })
-  })
-}
-
+const imgurUpload = require('../utils/imgurUpload')
 
 const groupController = {
   postGroup: async (req, res, next) => {
@@ -53,15 +44,13 @@ const groupController = {
       const { name, members } = req.body
       let img
       const { file } = req
-      if (!name || !members || !members.length) {
-        throw new Error('Please fill in all the fields')
-      }
+      if (!name || !members || !members.length) throw new Error('Please fill in all the fields')
 
       if (file) {
         imgur.setClientID(process.env.IMGUR_CLIENT_ID)
         img = await imgurUpload(file.path)
       }
-
+      console.log(img)
       await groupService.putGroup({ name, img, members, GroupId })
       return res.json({ status: 'success', message: 'Group updated', GroupId })
     }
@@ -74,6 +63,7 @@ const groupController = {
     try {
       const { UserId } = req.body
       const { GroupId } = req.params
+      if (!UserId || !GroupId) throw new Error('Please provide UserId and GroupId')
       const record = await groupService.postGroupMember(UserId, GroupId)
       res.json(record)
     }
@@ -85,6 +75,7 @@ const groupController = {
   deleteGroupMember: async (req, res, next) => {
     try {
       const { GroupId, MemberId } = req.params
+      if (!MemberId || !GroupId) throw new Error('Please provide MemberId and GroupId')
       await groupService.deleteGroupMember(GroupId, MemberId)
       res.json({ status: 'success', message: 'Member deleted' })
     }
@@ -97,6 +88,7 @@ const groupController = {
     try {
       const { GroupId } = req.params
       const { id: UserId } = req.user
+      if (!GroupId) throw new Error('Please provide GroupId')
       let { limit } = req.query
       limit = Number(limit)
       if (!limit) {
@@ -114,9 +106,8 @@ const groupController = {
     try {
       const { GroupId } = req.params
       req.body.GroupId = GroupId
-      const { name, amount, CategoryId, date, expenseDetail } = req.body
       await checkGroupExpense(req.body)
-      const record = await groupService.postGroupExpenses({ name, amount, GroupId, CategoryId, date, expenseDetail })
+      const record = await groupService.postGroupExpenses(req.body)
       res.json(record)
     }
     catch (err) {
@@ -127,11 +118,11 @@ const groupController = {
   putGroupExpenses: async (req, res, next) => {
     try {
       const { GroupId, ExpenseId } = req.params
-      const { name, amount, CategoryId, date, expenseDetail } = req.body
+      if (!GroupId || !ExpenseId) throw new Error('Please provide GroupId and ExpenseId')
       req.body.ExpenseId = ExpenseId
       req.body.GroupId = GroupId
       await checkGroupExpense(req.body)
-      await groupService.putGroupExpenses({ name, amount, GroupId, CategoryId, date, ExpenseId, expenseDetail })
+      await groupService.putGroupExpenses(req.body)
       res.json({ status: 'success', message: 'Group Expense updated', ExpenseId })
     }
     catch (err) {
@@ -143,6 +134,7 @@ const groupController = {
     try {
       const { ExpenseId } = req.params
       const { expenseDetail } = req.body
+      if (!ExpenseId || !expenseDetail || !expenseDetail.length) throw new Error('Please provide ExpenseId and expenseDetail')
       const record = await groupService.postExpenseDetail({ ExpenseId, expenseDetail })
       res.json(record)
     }
@@ -154,6 +146,7 @@ const groupController = {
   deleteExpenseDetail: async (req, res, next) => {
     try {
       const { DetailId } = req.params
+      if (!DetailId) throw new Error('Please provide DetailId')
       await groupService.deleteExpenseDetail(DetailId)
       res.json({ status: 'success', message: 'Expense detail deleted' })
     }

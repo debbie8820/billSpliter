@@ -195,6 +195,7 @@ const userController = {
     try {
       const { UserId: followingId } = req.params
       const { id: followerId } = req.user
+      if (!UserId) throw new Error('Please provide UserId')
       await userService.deleteFriend(followerId, followingId)
       res.json({ status: 'success', message: 'Friend deleted' })
     }
