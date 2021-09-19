@@ -18,10 +18,6 @@
     "password": null,
     "database": "database_production",
     "host": "127.0.0.1",
-    "dialect": "mysql",
-    "dialectOptions": {
-      "useUTC": false
-    },
-    "timezone": "+08:00"
+    "dialect": "mysql"
   }
 }
