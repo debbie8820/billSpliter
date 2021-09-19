@@ -1,9 +1,15 @@
 const expenseService = require('../services/expenseService')
 
 const expenseController = {
-  putExpense: (req, res, next) => {
-    const { ExpenseId } = req.params
-
+  deleteExpense: async (req, res, next) => {
+    try {
+      const { ExpenseId } = req.params
+      await expenseService.deleteExpense(ExpenseId)
+      res.json({ status: 'success', message: 'Expense deleted' })
+    }
+    catch (err) {
+      next(err)
+    }
   }
 }
 
