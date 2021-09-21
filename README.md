@@ -1,6 +1,9 @@
 # BillSpliter API
 This is an API server for a bill-spliting website.
 
+### API Documentation
+https://billspliter.docs.apiary.io/#
+
 ### Environments
 * [Node.js (14.16.1)](https://nodejs.org/en/)
 * [Express (4.17.1)](https://expressjs.com/zh-tw/)
