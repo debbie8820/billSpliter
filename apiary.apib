@@ -1,0 +1,727 @@
+FORMAT: 1A
+HOST: https://billsplit2021.herokuapp.com/api
+
+# billSpliter
+
+An api server for website that helps people split bills more easily
+
+## USER [/api/users]
+
+### 註冊 [POST /users/register]
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Body
+
+            {
+    "status": "success",
+    "token": "jsonwebtoken",
+    "user": {
+        "id": 2,
+        "name": "debbie",
+        "email": "user1@example.com",
+        "avatar": null
+    }
+}
+
+### 登入 [POST /users/login]
+
++ Response 200 (application/json)
+
+       {
+    "status": "success",
+    "token": "jsonwebtoken"
+       }
+       
+       
+### 取得目前使用者資訊 [GET /users/currentUser]
+
++ Response 200 (application/json)
+
+       {
+    "id": 2,
+    "account": "user123",
+    "email": "user1@hotmail.com",
+    "name": "user1",
+    "phone": "0944477383",
+    "avatar": null,
+    "createdAt": "2021-08-20T16:44:54.000Z",
+    "updatedAt": "2021-08-20T16:44:54.000Z"
+}
+
+
+### 取得目前使用者的消費紀錄 [GET /users/expenses{?limit=2}{&date1=2021-9-7}{&date2=2021-9-8}]
+
++ Parameters
+    + limit: 2 (optional, number) - The number of expenses to return
+    + date1: 2021-9-7 (optional, date) - The start date of the expenses
+    + date2: 2021-9-8 (optional, date) - The end date of the expenses
+
+
++ Response 200 (application/json)
+
+[
+    {
+        "id": 265,
+        "name": "Refined Frozen Salad",
+        "amount": 590,
+        "date": "2021-09-14T08:39:30.000Z",
+        "Category": {
+            "id": 45,
+            "code": "other",
+            "icon": "cash-outline",
+            "name": "其他"
+        }
+    },
+    {
+        "id": 445,
+        "name": "Incredible Wooden Bacon",
+        "amount": 18,
+        "date": "2021-09-14T06:53:26.000Z",
+        "Category": {
+            "id": 35,
+            "code": "life",
+            "icon": "cafe-outline",
+            "name": "生活"
+        }
+    },
+    {
+        "id": 245,
+        "name": "Generic Frozen Hat",
+        "amount": 760,
+        "date": "2021-09-14T01:21:00.000Z",
+        "Category": {
+            "id": 15,
+            "code": "entertainment",
+            "icon": "game-controller-outline",
+            "name": "娛樂"
+        }
+    }
+]
+
+### 新增單筆個人消費支出 [POST /users/expense]
++ Request (application/json)
+
+    + Headers
+
+    + Body
+    
+    {   
+        "name": "Drink",
+        "CategoryId": "5",
+        "amount": "20",
+        "date": "2021-8-18"
+    }
+
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Body
+    
+    {
+    "status": "success",
+    "message": "成功新增支出",
+    "ExpenseId": 697
+    }
+    
+    
+### 修改單筆個人消費支出 [PUT /users/expense/:ExpenseId]
++ Request (application/json)
+
+    + Headers
+
+    + Body
+    
+    {   
+        "name": "Drink",
+        "CategoryId": "5",
+        "amount": "20",
+        "date": "2021-8-18"
+    }
+
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Body
+    
+    {
+    "status": "success",
+    "message": "成功修改支出",
+    "ExpenseId": 697
+    }
+    
+    
+### 取得目前使用者的好友名單 [GET /users/friends]
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Body
+    
+    [
+    {
+        "followings": {
+            "friendId": 25,
+            "avatar": "http://placeimg.com/640/480/city",
+            "name": "user3",
+            "account": "@user3",
+            "Friendship": {
+                "followerId": 35,
+                "followingId": 25,
+                "createdAt": "2021-09-14T10:25:24.000Z",
+                "updatedAt": "2021-09-14T10:25:24.000Z"
+            }
+        }
+    },
+    {
+        "followings": {
+            "friendId": 45,
+            "avatar": "http://placeimg.com/640/480/nightlife",
+            "name": "user5",
+            "account": "@user5",
+            "Friendship": {
+                "followerId": 35,
+                "followingId": 45,
+                "createdAt": "2021-09-14T10:25:24.000Z",
+                "updatedAt": "2021-09-14T10:25:24.000Z"
+            }
+        }
+    }
+]
+    
+    
+
+### 取得使用者資訊(加好友使用) [GET /users?account=@user4]
+
+
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Body
+    
+    {
+    "id": 35,
+    "account": "@user4",
+    "name": "user4",
+    "avatar": "http://placeimg.com/640/480/nature",
+    "isFriend": 0
+    }
+
+
+### 修改目前使用者資訊 [PUT /users]
+
++ Request (application/json)
+
+    + Headers
+
+    + Body
+    
+    {   
+        "account": "@user100",
+        "password": "password",
+        "confirmPassword": "password"
+        "email": "user45@example.com",
+        "name": "hello",
+        "avatar":"imagePath",
+    }
+
++ Response 200 (application/json)
+
+    {
+    "id": 35,
+    "account": "@user100",
+    "password": "$2a$10$e9.4RXS8YaTeN5y8um79wuACDVWKHermKP7BCcJ9Q70m/6TmhdzSe",
+    "email": "user45@example.com",
+    "name": "hello",
+    "avatar": "https://i.imgur.com/dxa4T3m.jpeg",
+    "createdAt": "2021-09-14T10:25:24.000Z",
+    "updatedAt": "2021-09-15T09:54:40.134Z"
+    }
+
+
+### 新增好友 [POST /users/friends/:UserId]
+
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Body
+    
+    {
+    "status": "success",
+    "message": "Friend added"
+    }
+    
+    
+### 刪除好友 [DELETE /users/friends/:UserId]
+
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Body
+    
+    {
+    "status": "success",
+    "message": "Friend deleted"
+    }
+    
+    
+    
+## GROUP [/api/groups]
+
+### 新增單筆群組 [POST /groups]
+
++ Request (application/json)
+
+    + Headers
+
+    + Body
+    
+    {   
+        "name": "Group1",
+        "image": "URL",
+        "members": [2,4,6]
+    }
+
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Body
+    
+    {
+    "status": "success",
+    "message": "Group created",
+    "GroupId": 697
+    }
+
+
+
+### 取得單筆群組資訊 [GET /groups/:GroupId]
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Body
+
+{
+    "id": 35,
+    "img": "http://placeimg.com/640/480/animals",
+    "name": "澎湖之旅",
+    "totalExpense": "400",
+    "members": [
+        {
+            "id": 4,
+            "UserId": 15,
+            "GroupId": 35,
+            "User": {
+                "id": 15,
+                "name": "user2",
+                "avatar": "http://placeimg.com/640/480/business",
+                "totalUserPaid": null,
+                "totalUserOwed": "100"
+            }
+        },
+        {
+            "id": 9,
+            "UserId": 25,
+            "GroupId": 35,
+            "User": {
+                "id": 25,
+                "name": "user3",
+                "avatar": "http://placeimg.com/640/480/city",
+                "totalUserPaid": "200",
+                "totalUserOwed": "100"
+            }
+        },
+        {
+            "id": 14,
+            "UserId": 45,
+            "GroupId": 35,
+            "User": {
+                "id": 45,
+                "name": "user5",
+                "avatar": "http://placeimg.com/640/480/nightlife",
+                "totalUserPaid": "200",
+                "totalUserOwed": "200"
+            }
+        }
+    ]
+}
+
+
+
+### 修改單筆群組資訊 [PUT /groups/:GroupId]
++ Request (application/json)
+
+    + Headers
+
+    + Body
+    
+    {   
+        "name": "Group3",
+        "image": "URL",
+        "members": [2,4,6]
+    }
+
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Body
+    
+{
+    "status": "success",
+    "message": "Group updated",
+    "GroupId": "5"
+}
+
+
+### 新增群組成員 [POST /groups/:GroupId/members]
+
++ Request (application/json)
+
+    + Headers
+
+    + Body
+    
+    {   
+        "UserId": "23",
+    }
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Body
+    
+    {
+        "id": 22,
+        "UserId": 23,
+        "GroupId": 45
+    }
+    
+    
+### 刪除群組成員 [DELETE /groups/:GroupId/members/:MemberId]
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Body
+    
+    
+    {
+    "status": "success",
+    "message": "Member deleted"
+    }
+
+
+### 取得群組消費支出 [GET /groups/:GroupId/expenses?limit=2]
+
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Body
+    
+    [
+    {
+        "id": 525,
+        "name": "Handcrafted Rubber Car",
+        "amount": 100,
+        "GroupId": 5,
+        "date": "2021-09-14T02:11:05.000Z",
+        "totalUserPaid": "200",
+        "totalUserOwed": "100",
+        "CategoryId": 25,
+        "ExpenseDetails": {
+            "id": 3,
+            "ExpenseId": 525,
+            "payerId": 15,
+            "payeeId": 35,
+            "amount": 100,
+            "createdAt": "2021-09-14T10:25:24.000Z",
+            "updatedAt": "2021-09-14T10:25:24.000Z",
+            "payees": {
+                "id": 35,
+                "name": "hello",
+                "avatar": "https://i.imgur.com/dxa4T3m.jpeg"
+            },
+            "payers": {
+                "id": 15,
+                "name": "user2",
+                "avatar": "http://placeimg.com/640/480/business"
+            }
+        },
+        "Category": {
+            "id": 25,
+            "name": "交通",
+            "code": "transport",
+            "icon": "train-outline",
+            "createdAt": "2021-09-14T10:25:23.000Z",
+            "updatedAt": "2021-09-14T10:25:23.000Z"
+        }
+    },
+    {
+        "id": 525,
+        "name": "Handcrafted Rubber Car",
+        "amount": 100,
+        "GroupId": 5,
+        "date": "2021-09-14T02:11:05.000Z",
+        "totalUserPaid": "200",
+        "totalUserOwed": "100",
+        "CategoryId": 25,
+        "ExpenseDetails": {
+            "id": 21,
+            "ExpenseId": 525,
+            "payerId": 35,
+            "payeeId": 25,
+            "amount": 200,
+            "createdAt": "2021-09-16T10:25:24.000Z",
+            "updatedAt": "2021-09-16T10:25:24.000Z",
+            "payees": {
+                "id": 25,
+                "name": "user3",
+                "avatar": "http://placeimg.com/640/480/city"
+            },
+            "payers": {
+                "id": 35,
+                "name": "hello",
+                "avatar": "https://i.imgur.com/dxa4T3m.jpeg"
+            }
+        },
+        "Category": {
+            "id": 25,
+            "name": "交通",
+            "code": "transport",
+            "icon": "train-outline",
+            "createdAt": "2021-09-14T10:25:23.000Z",
+            "updatedAt": "2021-09-14T10:25:23.000Z"
+        }
+    },
+    {
+        "id": 515,
+        "name": "Tasty Cotton Gloves",
+        "amount": 100,
+        "GroupId": 5,
+        "date": "2021-09-14T00:13:34.000Z",
+        "totalUserPaid": "100",
+        "totalUserOwed": null,
+        "CategoryId": 15,
+        "ExpenseDetails": {
+            "id": 2,
+            "ExpenseId": 515,
+            "payerId": 35,
+            "payeeId": 5,
+            "amount": 100,
+            "createdAt": "2021-09-14T10:25:24.000Z",
+            "updatedAt": "2021-09-14T10:25:24.000Z",
+            "payees": {
+                "id": 5,
+                "name": "user1",
+                "avatar": "http://placeimg.com/640/480/city"
+            },
+            "payers": {
+                "id": 35,
+                "name": "hello",
+                "avatar": "https://i.imgur.com/dxa4T3m.jpeg"
+            }
+        },
+        "Category": {
+            "id": 15,
+            "name": "娛樂",
+            "code": "entertainment",
+            "icon": "game-controller-outline",
+            "createdAt": "2021-09-14T10:25:23.000Z",
+            "updatedAt": "2021-09-14T10:25:23.000Z"
+        }
+    }
+]
+
+
+### 新增群組消費支出 [POST /groups/:GroupId/expenses]
+
++ Request (application/json)
+
+    + Headers
+
+    + Body
+    
+    {
+    "name":"Expense123",
+    "amount":"1500",
+    "CategoryId": 5,
+    "date": "2021-9-17",
+    "expenseDetail": [
+        {"payerId":25, "payeeId":5, "amount": 1000},
+        {"payerId":5, "payeeId":35, "amount": 500}
+    ]
+}
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Body
+    
+    {
+    "id": 707,
+    "name": "Expense123",
+    "amount": "1500",
+    "GroupId": "5",
+    "CategoryId": 5,
+    "date": "2021-09-16T16:00:00.000Z",
+    "updatedAt": "2021-09-17T16:14:15.939Z",
+    "createdAt": "2021-09-17T16:14:15.939Z",
+    "expenseDetail": [
+        {
+            "id": 38,
+            "ExpenseId": 707,
+            "payerId": 25,
+            "payeeId": 5,
+            "amount": 1000,
+            "updatedAt": "2021-09-17T16:14:15.982Z",
+            "createdAt": "2021-09-17T16:14:15.982Z"
+        },
+        {
+            "id": 39,
+            "ExpenseId": 707,
+            "payerId": 5,
+            "payeeId": 35,
+            "amount": 500,
+            "updatedAt": "2021-09-17T16:14:15.982Z",
+            "createdAt": "2021-09-17T16:14:15.982Z"
+        }
+    ]
+}
+
+
+### 更新群組消費支出 [PUT /groups/:GroupId/expenses/:ExpenseId]
+
++ Request (application/json)
+
+    + Headers
+
+    + Body
+    
+    
+    {
+    "name":"Expenseyaaa",
+    "amount":85600,
+    "CategoryId": 5,
+    "date": "2021-9-21",
+    "expenseDetail": [
+        {"id":47,"payerId":25, "payeeId":5, "amount": 800},
+        {"id":48,"payerId":5, "payeeId":35, "amount": 56}
+    ]
+    }
+
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Body
+    
+
+{
+    "status": "success",
+    "message": "Group Expense updated",
+    "ExpenseId": "712"
+}
+
+
+### 新增多筆群組消費細節 [POST /groups/expenses/:ExpenseId/detail]
+
++ Request (application/json)
+
+    + Headers
+
+    + Body
+    
+    
+{
+    "expenseDetail":
+    [
+        {"payerId":25, "payeeId":5, "amount": 2},
+        {"payerId":5, "payeeId":35, "amount": 1}
+    ]
+}
+
+
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Body
+
+
+[
+    {
+        "id": 51,
+        "ExpenseId": "712",
+        "payerId": 25,
+        "payeeId": 5,
+        "amount": 2,
+        "updatedAt": "2021-09-18T18:19:42.589Z",
+        "createdAt": "2021-09-18T18:19:42.589Z"
+    },
+    {
+        "id": 52,
+        "ExpenseId": "712",
+        "payerId": 5,
+        "payeeId": 35,
+        "amount": 1,
+        "updatedAt": "2021-09-18T18:19:42.605Z",
+        "createdAt": "2021-09-18T18:19:42.605Z"
+    }
+]
+
+
+### 刪除單筆群組消費細節 [DELETE /groups/expenses/detail/:DetailId]
+
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Body
+    
+    {
+    "status": "success",
+    "message": "Expense detail deleted"
+    }
+    
+
+## EXPENSE [/api/expenses]
+
+### 取得單筆消費資訊(個人或群組皆可) [DELETE /expenses/:ExpenseId]
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Body
+    
+    {
+        "status": "success",
+        "message": "Expense deleted"
+    }
